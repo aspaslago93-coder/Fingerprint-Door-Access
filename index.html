@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arduino Fingerprint Door Access System</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Icon -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-fingerprint"></i>
+            <div>
+                <h2>Fingerprint Access</h2>
+                <p>Arduino Door Security System</p>
+            </div>
+        </div>
+
+        <div class="header-status">
+            <span class="status-dot"></span>
+            <span>System Online</span>
+        </div>
+    </header>
+
+
+    <!-- ================= NAVIGATION ================= -->
+    <nav class="navbar">
+        <a href="#dashboard" class="active">
+            <i class="fa-solid fa-chart-line"></i> Dashboard
+        </a>
+
+        <a href="#simulation">
+            <i class="fa-solid fa-fingerprint"></i> Simulasi
+        </a>
+
+        <a href="#activity">
+            <i class="fa-solid fa-clock-rotate-left"></i> Log Aktivitas
+        </a>
+
+        <a href="#about">
+            <i class="fa-solid fa-circle-info"></i> Tentang Sistem
+        </a>
+    </nav>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="container">
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <h1>Dashboard Monitoring</h1>
+                    <p>Monitoring sistem keamanan pintu berbasis fingerprint.</p>
+                </div>
+
+                <div class="date-time" id="dateTime">
+                    Memuat waktu...
+                </div>
+            </div>
+
+
+            <!-- STATUS CARDS -->
+            <div class="status-cards">
+
+                <div class="card">
+                    <div class="card-icon blue">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3>Status Arduino</h3>
+                    <p id="arduinoStatus">Online</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon purple">
+                        <i class="fa-solid fa-fingerprint"></i>
+                    </div>
+                    <h3>Sensor Fingerprint</h3>
+                    <p id="sensorStatus">Ready</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon green">
+                        <i class="fa-solid fa-door-open"></i>
+                    </div>
+                    <h3>Status Pintu</h3>
+                    <p id="doorStatus">Locked</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon orange">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3>Pengunci</h3>
+                    <p id="lockStatus">Active</p>
+                </div>
+
+            </div>
+
+
+            <!-- ACCESS STATISTICS -->
+            <div class="statistics">
+
+                <div class="stat-card">
+                    <h3>Total Scan</h3>
+                    <p id="totalScan">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Akses Berhasil</h3>
+                    <p id="successCount">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Akses Ditolak</h3>
+                    <p id="failedCount">0</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SIMULATION ================= -->
+        <section id="simulation" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <h1>Fingerprint Simulation</h1>
+                    <p>Simulasi autentikasi sidik jari untuk membuka pintu.</p>
+                </div>
+            </div>
+
+
+            <div class="simulation-container">
+
+                <!-- FINGERPRINT SCANNER -->
+                <div class="panel scanner-panel">
+
+                    <h2>
+                        <i class="fa-solid fa-fingerprint"></i>
+                        Fingerprint Scanner
+                    </h2>
+
+                    <div class="fingerprint-area">
+
+                        <i id="fingerprintIcon"
+                           class="fa-solid fa-fingerprint">
+                        </i>
+
+                        <p id="scanMessage">
+                            Ready to Scan
+                        </p>
+
+                        <span id="scanStatus">
+                            Tempatkan sidik jari untuk memulai
+                        </span>
+
+                    </div>
+
+
+                    <!-- FINGERPRINT SELECTION -->
+                    <label for="fingerprintSelect">
+                        Pilih Pengguna (NIM)
+                    </label>
+
+                    <select id="fingerprintSelect">
+
+                        <option value="264316022">
+                            Noval Angga - 264316022
+                        </option>
+
+                        <option value="264316028">
+                            Varel Daffa - 264316028
+                        </option>
+
+                        <option value="264316006">
+                            Andriansyah - 264316006
+                        </option>
+
+                        <option value="264316013">
+                            Mahendra - 264316013
+                        </option>
+
+                        <option value="264316008">
+                            Dwi Resyarina Aszahra - 264316008
+                        </option>
+
+                        <option value="invalid">
+                            Sidik Jari Tidak Terdaftar
+                        </option>
+
+                    </select>
+
+
+                    <!-- SCAN BUTTON -->
+                    <button id="scanButton" class="btn btn-primary">
+                        <i class="fa-solid fa-fingerprint"></i>
+                        Scan Fingerprint
+                    </button>
+
+                </div>
+
+
+                <!-- DOOR VISUALIZATION -->
+                <div class="panel door-panel">
+
+                    <h2>
+                        <i class="fa-solid fa-door-closed"></i>
+                        Door Visualization
+                    </h2>
+
+                    <div class="door-container">
+
+                        <div id="doorVisual" class="door locked">
+
+                            <div class="door-handle"></div>
+
+                            <i id="doorIcon"
+                               class="fa-solid fa-lock">
+                            </i>
+
+                        </div>
+
+                    </div>
+
+                    <h3 id="doorMessage">DOOR LOCKED</h3>
+
+                    <p id="doorDescription">
+                        Pintu dalam kondisi terkunci.
+                    </p>
+
+                    <button id="autoLockButton" class="btn btn-warning">
+                        <i class="fa-solid fa-lock"></i>
+                        Auto Lock
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= DEVICE INFORMATION ================= -->
+        <section id="devices" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <h1>Device Information</h1>
+                    <p>Informasi perangkat yang digunakan dalam sistem.</p>
+                </div>
+            </div>
+
+            <div class="device-container">
+
+                <div class="device-card">
+                    <i class="fa-solid fa-microchip"></i>
+                    <h3>Arduino Uno</h3>
+                    <p>Mikrokontroler utama sistem.</p>
+                    <span class="device-status">Connected</span>
+                </div>
+
+                <div class="device-card">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    <h3>FPM10A Sensor</h3>
+                    <p>Membaca dan memverifikasi sidik jari.</p>
+                    <span class="device-status">Ready</span>
+                </div>
+
+                <div class="device-card">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <h3>LED Indicator</h3>
+                    <p>Indikator akses berhasil atau ditolak.</p>
+                    <span class="device-status">Active</span>
+                </div>
+
+                <div class="device-card">
+                    <i class="fa-solid fa-lock"></i>
+                    <h3>Electronic Lock</h3>
+                    <p>Mengatur kondisi kunci pintu.</p>
+                    <span class="device-status">Locked</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ACTIVITY LOG ================= -->
+        <section id="activity" class="section">
+
+            <div class="section-heading">
+                <div>
+                    <h1>Activity Log</h1>
+                    <p>Riwayat aktivitas pemindaian sidik jari.</p>
+                </div>
+
+                <button id="clearLogButton" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                    Hapus Log
+                </button>
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Waktu</th>
+                            <th>NIM</th>
+                            <th>Nama Pengguna</th>
+                            <th>Autentikasi</th>
+                            <th>Status Pintu</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="activityTable">
+
+                        <tr id="emptyLog">
+                            <td colspan="6">
+                                Belum ada aktivitas pemindaian.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ABOUT SYSTEM ================= -->
+        <section id="about" class="section">
+
+            <div class="about-panel">
+
+                <h1>Tentang Sistem</h1>
+
+                <p>
+                    Arduino Fingerprint Door Access System merupakan
+                    simulasi sistem keamanan pintu menggunakan teknologi
+                    autentikasi sidik jari.
+                </p>
+
+                <p>
+                    Sistem ini menggunakan Arduino Uno dan sensor
+                    fingerprint FPM10A untuk melakukan proses
+                    identifikasi pengguna.
+                </p>
+
+                <h3>Alur Kerja Sistem</h3>
+
+                <ol>
+                    <li>Pengguna memilih sidik jari.</li>
+                    <li>Sensor melakukan proses pemindaian.</li>
+                    <li>Sistem memverifikasi sidik jari.</li>
+                    <li>Jika valid, pintu terbuka.</li>
+                    <li>Jika tidak valid, akses ditolak.</li>
+                    <li>Sistem mencatat aktivitas ke dalam log.</li>
+                </ol>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+
+        <h3>Arduino Fingerprint Door Access System</h3>
+
+        <p>
+            Praktikum Algoritma dan Bahasa Pemrograman Komputer
+        </p>
+
+        <p>
+            Kelompok 1B &copy; 2026
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>
